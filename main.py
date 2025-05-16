@@ -52,5 +52,5 @@ async def predict(request:Request):
     df = pd.DataFrame(data)
     model= load_model('models/best_model.pkl')
     prediction = model.predict(df)
-    return {"message": "Hola, el segmento estimado de tu SmartPhone es: ", "predicción": prediction[0]}
+    return {"message": "Hola, el segmento estimado de tu SmartPhone es: ", "predicción": prediction.tolist()}
  
