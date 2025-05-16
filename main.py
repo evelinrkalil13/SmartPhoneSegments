@@ -4,11 +4,12 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from model_manager import load_model
 import pandas as pd
-
 from fastapi.staticfiles import StaticFiles
+
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
+
 @app.get("/", response_class=HTMLResponse)
 async def form_home(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
@@ -44,3 +45,12 @@ async def clasificar_segmento(
             "prediction": prediction[0]
         }
     )
+
+@app.post("/predecir")
+async def predict(request:Request):
+    data = await request.json()
+    df = pd.DataFrame(data)
+    model= load_model('models/best_model.pkl')
+    prediction = model.predict(df)
+    return {"message": "Hola, el segmento estimado de tu SmartPhone es: ", "predicción": prediction[0]}
+ 
